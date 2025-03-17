@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WeChat</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f4f9;
+      }
+
+      .container {
+        display: flex;
+        width: 80%;
+        height: 60%;
+        max-width: 1000px;
+      }
+
+      .left-column,
+      .right-column {
+        flex: 1;
+        padding: 20px;
+      }
+
+      .left-column {
+        background-color: #7b7689;
+        border-right: 2px solid #ccc;
+      }
+
+      .right-column {
+        background-color: #ffffff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .avatar-box {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .avatar-box h2 {
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+      }
+
+      .avatar {
+        background-color: #f4f4f9;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+        border-radius: 50%;
+        border: 2px dashed #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .right-column h1 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+
+      .start-chat-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #76897b;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .start-chat-btn:hover {
+        opacity: 0.8;
+      }
+
+      .start-chat-btn a {
+        text-decoration: none;
+        color: white;
+      }
+      h2 {
+        margin-bottom: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-column">
+        <div class="avatar-box">
+          <h2>Create Your Avatar</h2>
+          <div class="avatar">
+            <p>Avatar goes here</p>
+          </div>
+        </div>
+      </div>
+      <div class="right-column">
+        <h1>Welcome</h1>
+        <h2>Username</h2>
+        <button class="start-chat-btn">
+          <a href="./chat.html">Start Chatting</a>
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
