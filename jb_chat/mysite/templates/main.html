@@ -23,7 +23,7 @@
         background-color: white;
         border-radius: 15px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        padding: 10px 20px;
+        padding: 15px 20px;
         transition: transform 0.2s;
         width: 500px;
         text-align: center;
@@ -49,7 +49,7 @@
         border-radius: 5px;
       }
 
-      button {
+      button, a {
         padding: 15px;
         border-radius: 10px;
         margin-top: 15px;
@@ -60,17 +60,13 @@
         background-color: #76897b;
         width: 100%;
         font-size: 16px;
-        opacity: 1; /* Set to 1 to make it fully visible initially */
+        opacity: 1; 
         transition: opacity 0.3s ease;
+        text-decoration: none;
       }
 
       button:hover {
         opacity: 0.8;
-      }
-
-      .signup button a {
-        text-decoration: none;
-        color: white;
       }
 
       .wrap {
@@ -89,31 +85,18 @@
       <h1>WeChat</h1>
       <h3>Login</h3>
 
-      <form action="">
-        <label for="email"> Email: </label>
-        <input
-          type="text"
-          id="first"
-          name="first"
-          placeholder="Enter your Email"
-          required
-        />
-
-        <label for="password"> Password: </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your Password"
-          required
-        />
-
         <div class="submit">
-          <button type="submit">Login</button>
+          <form method="POST">
+            {% csrf_token %} {{ form.as_p }}
+            <button type="submit">Login</button>
+          </form>
         </div>
+        {% if next %}
+          <p>Redirecting to the previous page after login...</p>
+        {% endif %}
 
         <div class="signup">
-          <button type="button"><a href="./signup.html">Sign Up</a></button>
+          <a style="width: 100px;" href="/signup/">Sign Up</a>
         </div>
       </form>
     </div>
