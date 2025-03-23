@@ -5,29 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
     <script>
-      const chatSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/chat/"
-      );
+      document.addEventListener('DOMContentLoaded', function() {
+        const roomName = "{{ room_name }}";
+        const usr = "{{ user.username }}";  // Get username from user object
+        if (roomName != ""){
+          const chatSocket = new WebSocket(
+              'ws://' + window.location.hostname + ':8001/ws/chat/' + roomName + '/'
+          );
 
-      chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        document.querySelector("#chat-log").value += data.message + "\n";
-      };
+          chatSocket.onmessage = function(e) {
+              const data = JSON.parse(e.data);
+              const message = data['message'];
+              const user = data['user'];
+              const chatLog = document.getElementById('chat-log');
+              chatLog.innerHTML += `<div><strong>${user}:</strong> ${message}</div>`;
+          };
 
-      chatSocket.onclose = function (e) {
-        console.error("Chat socket closed unexpectedly");
-      };
+          chatSocket.onclose = function(e) {
+              console.error('Chat socket closed unexpectedly');
+          };
 
-      document.querySelector("#chat-message-input").focus();
-      document.querySelector("#chat-message-input").onkeyup = function (e) {
-        if (e.keyCode === 13) {
-          // Enter key
-          const messageInputDom = document.querySelector("#chat-message-input");
-          const message = messageInputDom.value;
-          chatSocket.send(JSON.stringify({ message: message }));
-          messageInputDom.value = "";
-        }
-      };
+          document.getElementById('chat-message-input-button').onclick = function(e) {
+            const inputField = document.getElementById('chat-message-input');
+            const message = inputField.value;  // Only get the message content
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'user': usr,  // Send the user separately
+            }));
+            inputField.value = '';
+        };
+      }
+      });
     </script>
     <style>
       * {
@@ -111,17 +119,23 @@
       </div>
 
       <div class="chat-box">
-        <div class="messages">
-          <!-- Display message logic here -->
-        </div>
+        <div class="messages" id="chat-log">
+          <!-- Loop through the messages and display each one -->
+          {% for message in messages %}
+              <div><strong>{{ message.user.username }}:</strong> {{ message.content }}</div>
+          {% empty %}
+              <div>No messages yet.</div>
+          {% endfor %}
+      </div>
+      
 
         <div class="chat-input">
           <input
             type="text"
-            id="messageInput"
+            id="chat-message-input"
             placeholder="Type a message..."
           />
-          <button id="sendButton">Send</button>
+          <button id="chat-message-input-button">Send</button>
         </div>
       </div>
     </div>
