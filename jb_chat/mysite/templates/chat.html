@@ -104,23 +104,35 @@
         align-items: center;
         justify-content: space-between;
       }
+      img {
+        width: 120px;
+        height: 120px;
+        position: absolute
+      }
     </style>
   </head>
   <body>
+    {% load static %}
     <div class="container">
       <div class="side-nav">
-        <h2>Chats</h2>
+        <h2> {{user}} Chats</h2>
+        <div>
+          <img src="{% static av.skin.file_location %}">
+          <img src="{% static av.face.file_location %}">
+          <img src="{% static av.hair.file_location %}">
+        </div>
         <ul>
-          <li>Chat 1</li>
-          <li>Chat 2</li>
-          <li>Chat 3</li>
-          <li>Chat 4</li>
+          {% for cr in chatrooms %}
+          <li><a href="/chat/{{ cr }}/">{{ cr }}</a></li>
+          {% endfor %}
         </ul>
       </div>
 
       <div class="chat-box">
         <div class="messages" id="chat-log">
           <!-- Loop through the messages and display each one -->
+          
+          
           {% for message in messages %}
               <div><strong>{{ message.user.username }}:</strong> {{ message.content }}</div>
           {% empty %}

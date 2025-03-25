@@ -6,8 +6,11 @@ import json
 
 # This makes sure to run these database calls in sync mode within an async function
 @database_sync_to_async
-def get_or_create_chat_room(room_name):
-    return ChatRoom.objects.get_or_create(name=room_name)
+def get_chat_room(room_name):
+    try:
+        return ChatRoom.objects.get(name=room_name)
+    except ChatRoom.DoesNotExist:
+        return None
 
 @database_sync_to_async
 def save_message(room, user, message_content):
@@ -21,7 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'chat_{self.room_name}'
 
         # Get or create the chat room asynchronously
-        self.room, created = await get_or_create_chat_room(self.room_name)
+        self.room = await get_chat_room(self.room_name)
 
         # Join the WebSocket group
         await self.channel_layer.group_add(

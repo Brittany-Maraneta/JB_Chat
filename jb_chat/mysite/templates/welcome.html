@@ -98,6 +98,10 @@
       h2 {
         margin-bottom: 25px;
       }
+      img {
+        width: 120px;
+        height: 120px;
+      }
     </style>
   </head>
   <body>
@@ -106,7 +110,9 @@
         <div class="avatar-box">
           <h2>Create Your Avatar</h2>
           <div class="avatar">
-            <p>Avatar goes here</p>
+            {% load static %}
+            <img src="{% static "avatars/avatar.png" %}">
+
           </div>
         </div>
       </div>
