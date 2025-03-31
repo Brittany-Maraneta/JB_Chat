@@ -18,13 +18,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #f4f4f9;
+        background-color: #a1857a;
       }
 
       .container {
         display: flex;
         width: 80%;
-        height: 60%;
+        height: 70%;
         max-width: 1000px;
       }
 
@@ -35,7 +35,7 @@
       }
 
       .left-column {
-        background-color: #7b7689;
+        background-color: #f0e5e0;
         border-right: 2px solid #ccc;
       }
 
@@ -102,7 +102,17 @@
       img {
         width: 120px;
         height: 120px;
-        position: absolute
+        position: absolute;
+      }
+      .avatarb {
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        background-color: #76897b;
+        background: url(https://images.pexels.com/photos/31387106/pexels-photo-31387106/free-photo-of-vibrant-yellow-cosmos-flower-in-sunlight.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2)
+          no-repeat;
+        border: none;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -112,11 +122,11 @@
         <div class="avatar-box">
           <h2>Create Your Avatar</h2>
           <div class="avatar">
-
-            <img src="{% static av %}">
-
+            <img src="{% static av %}" />
           </div>
         </div>
+        <p>hello</p>
+        <button class="avatarb">select</button>
       </div>
       <div class="right-column">
         <h1>Welcome</h1>
