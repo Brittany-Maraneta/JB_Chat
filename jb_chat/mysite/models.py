@@ -20,21 +20,10 @@ class Message(models.Model):
     def __str__(self):
         return f'{self.user.username}: {self.content}'
 
-TYPES = (("hair","Hair"),( "face","Face"),( "skin", "Skin"))
-
-class AvatarAttribute(models.Model):
-    feature_name = models.CharField(max_length=100)
-    file_location = models.CharField(max_length=100, null=True, blank=True)
-    type = models.CharField(max_length=10, choices=TYPES)
-
-    def __str__(self):
-        return f"{self.feature_name}"
 
 class Avatar(models.Model):
     name = models.CharField(max_length=100)
-    hair = models.OneToOneField(AvatarAttribute, on_delete=models.CASCADE, null=True, blank=True, related_name='avhair')
-    face = models.OneToOneField(AvatarAttribute, on_delete=models.CASCADE, null=True, blank=True, related_name='avface')
-    skin = models.OneToOneField(AvatarAttribute, on_delete=models.CASCADE, null=True, blank=True, related_name='avskin')
+    file_location = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -43,7 +32,7 @@ class Avatar(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) 
-    avatar = models.OneToOneField(Avatar, on_delete=models.SET_NULL, null=True, blank=True)
+    avatar = models.ManyToManyField(Avatar)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"

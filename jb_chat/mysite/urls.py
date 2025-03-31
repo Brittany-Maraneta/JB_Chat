@@ -28,4 +28,5 @@ urlpatterns = [
     path('chat/', views.chat, name='chat'),
     path('chat/<str:room_name>/', views.chat_room, name='chat_room'),
     path('', views.default_route, name='default_route'),
+    path('api/login/', LoginView.as_view(template_name='main.html'), name='login')
 ]

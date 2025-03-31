@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+  {% load static %}
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,18 +8,28 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const roomName = "{{ room_name }}";
-        const usr = "{{ user.username }}";  // Get username from user object
+        const usr = "{{ user.username }}";
+        
+        
         if (roomName != ""){
           const chatSocket = new WebSocket(
-              'ws://' + window.location.hostname + ':8001/ws/chat/' + roomName + '/'
+              'ws://' + window.location.hostname + ':80/ws/chat/' + roomName + '/'
           );
 
           chatSocket.onmessage = function(e) {
               const data = JSON.parse(e.data);
               const message = data['message'];
               const user = data['user'];
+              const timestamp = data['timestamp']
+              let avat = data['avatar']
+              avat = '\\static/'+ avat
               const chatLog = document.getElementById('chat-log');
-              chatLog.innerHTML += `<div><strong>${user}:</strong> ${message}</div>`;
+              if (user == usr){
+                chatLog.innerHTML += ` <div style="position:relative"><img class="bubble-img" src="${avat} "> </div> <div><strong style="margin-left:34px">${user}:</strong> <p class="speech-bubble"> ${timestamp} <br/> ${message}</p></div>`;
+              }else{
+                chatLog.innerHTML += `<div style="position:relative"><img class="bubble-img" src="${avat}"> </div> <div><strong style="margin-left:34px">${user}:</strong> <p class="speech-bubble2"> ${timestamp} <br/> ${message}</p></div>`;
+              }
+              chatLog.scrollTop = chatLog.scrollHeight;
           };
 
           chatSocket.onclose = function(e) {
@@ -27,12 +38,17 @@
 
           document.getElementById('chat-message-input-button').onclick = function(e) {
             const inputField = document.getElementById('chat-message-input');
-            const message = inputField.value;  // Only get the message content
+            const message = inputField.value;
+            
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'user': usr,  // Send the user separately
+                'user': usr, 
             }));
             inputField.value = '';
+        };
+        window.onload = function() {
+          const chatLog = document.getElementById('chat-log');
+          chatLog.scrollTop = chatLog.scrollHeight;
         };
       }
       });
@@ -54,6 +70,7 @@
       .container {
         display: flex;
         flex: 1;
+        border: 2px solid black
       }
 
       .side-nav {
@@ -90,55 +107,123 @@
 
       .messages {
         flex: 1;
-        overflow-y: auto;
-        padding: 20px;
-        background-color: #fff;
-        border-bottom: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px 0;
+        overflow-y: auto;  /* Enable vertical scrolling */
+        max-height: calc(100vh - 150px); 
+       
       }
-
+   
       .chat-input {
         padding: 10px 20px;
         background-color: #e9e9e9;
         border-top: 2px solid #ccc;
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        position: sticky;
       }
+
+      .speech-bubble {
+        background: #8b859b;
+        border-radius: .4em;
+        right: 0;
+        width: 40%;
+        height: auto;
+        border: 15px solid transparent;
+        text-align: left;
+        padding-bottom: 15px;
+        word-wrap: break-word;
+      }
+      .speech-bubble2 {
+        background: #c2b9da;
+        border-radius: .4em;
+        margin-right: auto;
+        width: 40%;
+        height: auto;
+        border: 15px solid transparent;
+        text-align: left;
+        padding-bottom: 15px;
+
+        word-wrap: break-word;
+      }
+    
       img {
         width: 120px;
         height: 120px;
         position: absolute
       }
+      .chats{
+        margin-top: 150px;
+      }
+      #chat-message-input-button {
+        position: absolute;
+        margin-left: 250px;
+      }
+      .bubble-img{
+        width: 32px;
+        height: 32px;
+        
+      }
+      
+      
     </style>
   </head>
   <body>
-    {% load static %}
     <div class="container">
       <div class="side-nav">
-        <h2> {{user}} Chats</h2>
+        <h2> {{user.username}} Chats</h2>
         <div>
-          <img src="{% static av.skin.file_location %}">
-          <img src="{% static av.face.file_location %}">
-          <img src="{% static av.hair.file_location %}">
+          {% for k in avs %}
+            {% if k.user == user.username %}
+              <img src="{% static k.avatar %}">
+            {% endif %}
+          {% endfor %}
         </div>
-        <ul>
+        <div class="chats">
+          <a href="/welcome"> Profile </a>
+          <ul>
           {% for cr in chatrooms %}
-          <li><a href="/chat/{{ cr }}/">{{ cr }}</a></li>
+            <li><a href="/chat/{{ cr }}/">{{ cr }}</a></li>
           {% endfor %}
         </ul>
+      </div>
       </div>
 
       <div class="chat-box">
         <div class="messages" id="chat-log">
           <!-- Loop through the messages and display each one -->
           
-          
           {% for message in messages %}
-              <div><strong>{{ message.user.username }}:</strong> {{ message.content }}</div>
-          {% empty %}
-              <div>No messages yet.</div>
+            {% if user.username == message.user.username %}
+                  <div >
+                    <div style="position:relative">
+                      {% for k in avs %}
+                        {% if k.user == message.user.username %}
+                          <img class="bubble-img" src="{% static k.avatar %}">
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    <strong style="margin-left:34px">{{ message.user.username }}:</strong >
+                    <p class="speech-bubble"> {{ message.timestamp }} <br/> {{ message.content }}</p>
+                  </div>
+            {% else %}
+                <div >
+                  <div style="position:relative">
+                    {% for k in avs %}
+                        {% if k.user == message.user.username %}
+                          <img class="bubble-img" src="{% static k.avatar %}">
+                        {% endif %}
+                      {% endfor %}
+                  </div>
+                  <strong style="margin-left:34px">{{ message.user.username }}:</strong >
+                  <p class="speech-bubble2"> {{ message.timestamp }} <br/>  {{ message.content }}</p>
+                </div>
+            {% endif %}
+            {% empty %}
+                <div>No messages yet.</div> 
           {% endfor %}
-      </div>
+        </div>
       
 
         <div class="chat-input">
@@ -147,8 +232,9 @@
             id="chat-message-input"
             placeholder="Type a message..."
           />
-          <button id="chat-message-input-button">Send</button>
+          <button id="chat-message-input-button">Send</button>  
         </div>
+        
       </div>
     </div>
   </body>
